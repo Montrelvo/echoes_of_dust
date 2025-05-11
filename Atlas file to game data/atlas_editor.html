@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Metadata Editor</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f0f0f0; }
+        .container { display: flex; gap: 20px; }
+        .atlas-display { border: 1px solid #ccc; }
+        .editor-panel { border: 1px solid #ccc; padding: 15px; background-color: #fff; min-width: 300px; }
+        .editor-panel label { display: block; margin-top: 10px; font-weight: bold; }
+        .editor-panel input[type="text"], 
+        .editor-panel select,
+        .editor-panel textarea { width: calc(100% - 12px); padding: 5px; margin-top: 5px; border: 1px solid #ddd; border-radius: 3px; }
+        .editor-panel button { padding: 8px 15px; margin-top: 15px; background-color: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        .editor-panel button:hover { background-color: #0056b3; }
+        #tags-container span { display: inline-block; background-color: #e0e0e0; padding: 3px 7px; margin-right: 5px; border-radius: 3px; font-size: 0.9em; }
+        #tags-container button { font-size: 0.8em; padding: 2px 4px; margin-left: 5px; background-color: #ff6b6b; }
+        #entry-list { list-style-type: none; padding: 0; max-height: 400px; overflow-y: auto; border: 1px solid #ddd; margin-top:10px;}
+        #entry-list li { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; }
+        #entry-list li:hover { background-color: #f0f0f0; }
+        #entry-list li.selected { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Atlas Metadata Editor</h1>
+
+    <div>
+        <label for="json-file-input">Load Atlas Metadata Template (JSON):</label>
+        <input type="file" id="json-file-input" accept=".json">
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <div class="atlas-viewer">
+            <h2>Atlas Preview</h2>
+            <canvas id="atlas-canvas" class="atlas-display" width="512" height="512"></canvas> 
+            <!-- Adjust canvas size as needed, or make it dynamic -->
+        </div>
+
+        <div class="editor-panel">
+            <h2>Edit Tile/Sprite Metadata</h2>
+            <div id="selected-tile-info">No tile selected. Click on the atlas or an entry from the list.</div>
+            
+            <ul id="entry-list">
+                <!-- List of entries will be populated here by JS -->
+            </ul>
+
+            <form id="metadata-form">
+                <label for="entry-id">ID:</label>
+                <input type="text" id="entry-id" name="id">
+
+                <label for="entry-name">Name:</label>
+                <input type="text" id="entry-name" name="name">
+
+                <label for="entry-type">Type:</label>
+                <select id="entry-type" name="type">
+                    <option value="">--Select Type--</option>
+                    <option value="mapTile">Map Tile</option>
+                    <option value="creatureSprite">Creature Sprite</option>
+                    <option value="itemSprite">Item Sprite</option>
+                    <option value="uiElement">UI Element</option>
+                    <option value="other">Other</option>
+                </select>
+
+                <label for="entry-x">X Coordinate (in atlas):</label>
+                <input type="text" id="entry-x" name="x" readonly>
+
+                <label for="entry-y">Y Coordinate (in atlas):</label>
+                <input type="text" id="entry-y" name="y" readonly>
+
+                <div id="creature-id-group" style="display:none;">
+                    <label for="entry-creature-id">Creature ID (for bestiary link):</label>
+                    <input type="text" id="entry-creature-id" name="creatureId">
+                </div>
+
+                <label for="entry-tags-input">Tags:</label>
+                <input type="text" id="entry-tags-input" placeholder="Enter tag and press Add">
+                <button type="button" id="add-tag-button">Add Tag</button>
+                <div id="tags-container" style="margin-top: 5px;">
+                    <!-- Tags will be displayed here -->
+                </div>
+                
+                <label for="entry-notes">Notes for User:</label>
+                <textarea id="entry-notes" name="notes_for_user" rows="3"></textarea>
+
+                <button type="button" id="update-entry-button">Update Entry in List</button>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+    <button type="button" id="export-json-button">Export Completed atlas_metadata.json</button>
+
+    <script src="atlas_editor.js"></script>
+</body>
+</html>
