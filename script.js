@@ -17,6 +17,12 @@ let gameState = {
     settings: {
         gameSpeed: 1000 // milliseconds per game tick (1 second)
     },
+    populationProductionRates: {
+        foodPerSurvivor: 0.05,
+        waterPerSurvivor: 0.05,
+        scrapPerSurvivor: 0.05,
+        researchPointsPer5Survivors: 0.05
+    },
     // Refactored Idle Production Centers
     idleProduction: {
         // Global worker bonus, potentially modified by tech
@@ -64,6 +70,18 @@ let gameState = {
     },
     technology: {
         basicTools: {
+            researched: false,
+            cost: { researchPoints: 5 }
+        },
+        writing: {
+            researched: false,
+            cost: { researchPoints: 5 }
+        },
+        mapMaking: {
+            researched: false,
+            cost: { researchPoints: 5 }
+        },
+        trade: {
             researched: false,
             cost: { researchPoints: 5 }
         }
@@ -128,6 +146,12 @@ const upgradeResearchButton = document.getElementById('upgrade-research-button')
 // Technology elements
 const techBasicToolsStatusSpan = document.getElementById('tech-basic-tools-status');
 const researchBasicToolsButton = document.getElementById('research-basic-tools-button');
+const techWritingStatusSpan = document.getElementById('tech-writing-status');
+const researchWritingButton = document.getElementById('research-writing-button');
+const techMapMakingStatusSpan = document.getElementById('tech-map-making-status');
+const researchMapMakingButton = document.getElementById('research-map-making-button');
+const techTradeStatusSpan = document.getElementById('tech-trade-status');
+const researchTradeButton = document.getElementById('research-trade-button');
 
 
 // Initial choice buttons
@@ -158,6 +182,12 @@ function gameTick() {
     gameState.resources.food += gameState.idleProduction.farming.currentRate;
     gameState.resources.water += gameState.idleProduction.water.currentRate;
     gameState.resources.researchPoints += gameState.idleProduction.research.currentRate;
+
+    // Add population-based production
+    gameState.resources.food += gameState.population.current * gameState.populationProductionRates.foodPerSurvivor;
+    gameState.resources.water += gameState.population.current * gameState.populationProductionRates.waterPerSurvivor;
+    gameState.resources.scrap += gameState.population.current * gameState.populationProductionRates.scrapPerSurvivor;
+    gameState.resources.researchPoints += Math.floor(gameState.population.current / 5) * gameState.populationProductionRates.researchPointsPer5Survivors;
     // Exploration removed for now
 
     // 3. Update Resource Display
@@ -248,6 +278,26 @@ function updateDisplay() {
     researchBasicToolsButton.disabled = basicToolsTech.researched || gameState.resources.researchPoints < basicToolsTech.cost.researchPoints;
     researchBasicToolsButton.textContent = basicToolsTech.researched ? "Researched" : `Research (Cost: ${basicToolsTech.cost.researchPoints} RP)`;
 
+    const writingTech = gameState.technology.writing;
+    if (techWritingStatusSpan) techWritingStatusSpan.textContent = writingTech.researched ? "Researched" : "Locked";
+    if (researchWritingButton) {
+        researchWritingButton.disabled = writingTech.researched || gameState.resources.researchPoints < writingTech.cost.researchPoints;
+        researchWritingButton.textContent = writingTech.researched ? "Researched" : `Research (Cost: ${writingTech.cost.researchPoints} RP)`;
+    }
+
+    const mapMakingTech = gameState.technology.mapMaking;
+    if (techMapMakingStatusSpan) techMapMakingStatusSpan.textContent = mapMakingTech.researched ? "Researched" : "Locked";
+    if (researchMapMakingButton) {
+        researchMapMakingButton.disabled = mapMakingTech.researched || gameState.resources.researchPoints < mapMakingTech.cost.researchPoints;
+        researchMapMakingButton.textContent = mapMakingTech.researched ? "Researched" : `Research (Cost: ${mapMakingTech.cost.researchPoints} RP)`;
+    }
+
+    const tradeTech = gameState.technology.trade;
+    if (techTradeStatusSpan) techTradeStatusSpan.textContent = tradeTech.researched ? "Researched" : "Locked";
+    if (researchTradeButton) {
+        researchTradeButton.disabled = tradeTech.researched || gameState.resources.researchPoints < tradeTech.cost.researchPoints;
+        researchTradeButton.textContent = tradeTech.researched ? "Researched" : `Research (Cost: ${tradeTech.cost.researchPoints} RP)`;
+    }
 
     // Update survivor list display
     renderSurvivorList();
@@ -448,6 +498,45 @@ function researchBasicTools() {
     }
 }
 
+// --- New Technology Actions ---
+function researchWriting() {
+    const tech = gameState.technology.writing;
+    if (!tech.researched && gameState.resources.researchPoints >= tech.cost.researchPoints) {
+        gameState.resources.researchPoints -= tech.cost.researchPoints;
+        tech.researched = true;
+        // Add any specific bonus for Writing here if needed in the future
+        console.log("Researched Writing!");
+        updateDisplay();
+    } else {
+        console.log("Cannot research Writing - already researched or insufficient RP.");
+    }
+}
+
+function researchMapMaking() {
+    const tech = gameState.technology.mapMaking;
+    if (!tech.researched && gameState.resources.researchPoints >= tech.cost.researchPoints) {
+        gameState.resources.researchPoints -= tech.cost.researchPoints;
+        tech.researched = true;
+        // Add any specific bonus for Map Making here if needed in the future
+        console.log("Researched Map Making!");
+        updateDisplay();
+    } else {
+        console.log("Cannot research Map Making - already researched or insufficient RP.");
+    }
+}
+
+function researchTrade() {
+    const tech = gameState.technology.trade;
+    if (!tech.researched && gameState.resources.researchPoints >= tech.cost.researchPoints) {
+        gameState.resources.researchPoints -= tech.cost.researchPoints;
+        tech.researched = true;
+        // Add any specific bonus for Trade here if needed in the future
+        console.log("Researched Trade!");
+        updateDisplay();
+    } else {
+        console.log("Cannot research Trade - already researched or insufficient RP.");
+    }
+}
 
 // --- Game Setup ---
 function makeInitialChoice(choiceType) {
@@ -517,6 +606,9 @@ function init() {
     buildShelterButton.addEventListener('click', buildShelter);
     searchSurvivorsButton.addEventListener('click', searchForSurvivors);
     researchBasicToolsButton.addEventListener('click', researchBasicTools);
+    if (researchWritingButton) researchWritingButton.addEventListener('click', researchWriting);
+    if (researchMapMakingButton) researchMapMakingButton.addEventListener('click', researchMapMaking);
+    if (researchTradeButton) researchTradeButton.addEventListener('click', researchTrade);
 
     // Add event listeners for upgrade buttons
     upgradeScavengingButton.addEventListener('click', () => upgradeCenter('scavenging'));
