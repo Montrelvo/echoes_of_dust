@@ -20,92 +20,101 @@
     <div id="game-container" style="display: none;"> <!-- Hide game initially -->
         <div id="resource-display">
             <h2>Resources</h2>
-            <p>Scrap: <span id="scrap-count">0</span></p>
-            <p>Food: <span id="food-count">10</span></p>
-            <p>Water: <span id="water-count">10</span></p>
-            <p>Research Points: <span id="rp-count">0</span></p>
-            <!-- Add more resources as needed -->
+            <details open>
+                <summary>Current Stockpiles</summary>
+                <p>Scrap: <span id="scrap-count">0</span></p>
+                <p>Food: <span id="food-count">10</span></p>
+                <p>Water: <span id="water-count">10</span></p>
+                <p>Research Points: <span id="rp-count">0</span></p>
+                <!-- Add more resources as needed -->
+            </details>
         </div>
 
         <div id="settlement-management">
             <h2>Settlement</h2>
-            <div id="buildings">
-                <h3>Buildings</h3>
-                <p>Shelters: <span id="shelter-count">0</span></p>
-                <button id="build-shelter-button">Build Shelter (Cost: 10 Scrap)</button>
-            </div>
-            <div id="survivors">
-                <h3>Survivors</h3>
-                <p>Population: <span id="population-count">1</span> / <span id="max-population-count">0</span></p>
-                <button id="search-survivors-button" disabled>Search for Survivors (Needs Shelter)</button>
-                <ul id="survivor-list">
-                    <!-- Survivor list items with assignment controls will be added here by JS -->
-                </ul>
-            </div>
+            <details open>
+                <summary>Buildings</summary>
+                <div id="buildings">
+                    <p>Shelters: <span id="shelter-count">0</span></p>
+                    <button id="build-shelter-button">Build Shelter (Cost: 10 Scrap)</button>
+                </div>
+            </details>
+            <details open>
+                <summary>Survivors</summary>
+                <div id="survivors">
+                    <p>Population: <span id="population-count">1</span> / <span id="max-population-count">0</span></p>
+                    <button id="search-survivors-button" disabled>Search for Survivors (Needs Shelter)</button>
+                    <ul id="survivor-list">
+                        <!-- Survivor list items with assignment controls will be added here by JS -->
+                    </ul>
+                </div>
+            </details>
         </div>
 
         <div id="idle-systems">
             <h2>Idle Production Centers</h2>
             <p id="idle-system-info">Status: Waiting for initial choice...</p> <!-- Keep this for initial state -->
 
-            <div class="idle-center" id="scavenging-center">
-                <h3>Scavenging (Scrap)</h3>
+            <details class="idle-center-details" id="scavenging-center" open>
+                <summary>Scavenging (Scrap)</summary>
                 <p>Level: <span id="scavenging-level">0</span></p>
                 <p>Workers: <span id="scavenging-workers">0</span></p>
                 <p>Rate: <span id="scavenging-rate">0.00</span> / tick</p>
                 <button id="upgrade-scavenging-button" disabled>Upgrade (Cost: <span id="scavenging-upgrade-cost">?</span> Food)</button>
-            </div>
+            </details>
 
-            <div class="idle-center" id="farming-center">
-                <h3>Farming (Food)</h3>
+            <details class="idle-center-details" id="farming-center" open>
+                <summary>Farming (Food)</summary>
                 <p>Level: <span id="farming-level">0</span></p>
                 <p>Workers: <span id="farming-workers">0</span></p>
                 <p>Rate: <span id="farming-rate">0.00</span> / tick</p>
                 <button id="upgrade-farming-button" disabled>Upgrade (Cost: <span id="farming-upgrade-cost">?</span> Water)</button>
-            </div>
+            </details>
 
-            <div class="idle-center" id="water-center">
-                <h3>Water Collection</h3>
+            <details class="idle-center-details" id="water-center" open>
+                <summary>Water Collection</summary>
                 <p>Level: <span id="water-level">0</span></p>
                 <p>Workers: <span id="water-workers">0</span></p>
                 <p>Rate: <span id="water-rate">0.00</span> / tick</p>
                 <button id="upgrade-water-button" disabled>Upgrade (Cost: <span id="water-upgrade-cost">?</span> Scrap)</button>
-            </div>
+            </details>
 
-             <div class="idle-center" id="research-center" style="display: none;"> <!-- Keep research separate for now -->
-                <h3>Research Hub (RP)</h3>
+            <details class="idle-center-details" id="research-center" style="display: none;" open> <!-- Keep research separate for now -->
+                <summary>Research Hub (RP)</summary>
                 <p>Level: <span id="research-level">0</span></p>
                 <p>Workers: <span id="research-workers">0</span></p>
                 <p>Rate: <span id="research-rate">0.00</span> / tick</p>
                 <button id="upgrade-research-button" disabled>Upgrade (Cost: ?)</button> <!-- Upgrade cost TBD -->
-            </div>
+            </details>
         </div>
 
         <div id="progression">
             <h2>Progression</h2>
-            <div id="technology-tree">
-                <h3>Technology</h3>
-                <div class="tech-item">
-                    <span>Basic Tools (<span id="tech-basic-tools-status">Locked</span>)</span>
-                    <button id="research-basic-tools-button" disabled>Research (Cost: 5 RP)</button>
-                    <span class="tech-effect">Effect: +0.02 Bonus/Worker</span>
+            <details open>
+                <summary>Technology</summary>
+                <div id="technology-tree">
+                    <div class="tech-item">
+                        <span>Basic Tools (<span id="tech-basic-tools-status">Locked</span>)</span>
+                        <button id="research-basic-tools-button" disabled>Research (Cost: 5 RP)</button>
+                        <span class="tech-effect">Effect: +0.02 Bonus/Worker</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>Writing (<span id="tech-writing-status">Locked</span>)</span>
+                        <button id="research-writing-button">Research (Cost: 5 RP)</button>
+                        <span class="tech-effect">Effect: Unlocks further research/options.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>Map Making (<span id="tech-map-making-status">Locked</span>)</span>
+                        <button id="research-map-making-button">Research (Cost: 5 RP)</button>
+                        <span class="tech-effect">Effect: May unlock exploration or reveal map areas.</span>
+                    </div>
+                    <div class="tech-item">
+                        <span>Trade (<span id="tech-trade-status">Locked</span>)</span>
+                        <button id="research-trade-button">Research (Cost: 5 RP)</button>
+                        <span class="tech-effect">Effect: May unlock trade routes or options.</span>
+                    </div>
                 </div>
-                <div class="tech-item">
-                    <span>Writing (<span id="tech-writing-status">Locked</span>)</span>
-                    <button id="research-writing-button">Research (Cost: 5 RP)</button>
-                    <span class="tech-effect">Effect: Unlocks further research/options.</span>
-                </div>
-                <div class="tech-item">
-                    <span>Map Making (<span id="tech-map-making-status">Locked</span>)</span>
-                    <button id="research-map-making-button">Research (Cost: 5 RP)</button>
-                    <span class="tech-effect">Effect: May unlock exploration or reveal map areas.</span>
-                </div>
-                <div class="tech-item">
-                    <span>Trade (<span id="tech-trade-status">Locked</span>)</span>
-                    <button id="research-trade-button">Research (Cost: 5 RP)</button>
-                    <span class="tech-effect">Effect: May unlock trade routes or options.</span>
-                </div>
-            </div>
+            </details>
             <!-- Survivor / Expansion info later -->
         </div>
     </div>

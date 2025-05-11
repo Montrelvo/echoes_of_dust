@@ -37,3 +37,67 @@ h1, h2 {
     font-weight: bold;
     color: #7fffd4; /* Aquamarine */
 }
+/* Styles for details/summary dropdowns */
+details {
+    background-color: #3a3a3a;
+    border: 1px solid #555;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+details[open] {
+    padding-bottom: 10px;
+}
+
+summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px;
+    background-color: #444;
+    color: #ffa500; /* Orange, like h2 */
+    border-radius: 3px;
+    margin: -5px -5px 5px -5px; /* Adjust to align with details padding */
+    list-style: none; /* Remove default triangle/marker */
+}
+
+summary::-webkit-details-marker {
+    display: none; /* Hide default marker in WebKit browsers */
+}
+
+summary::before {
+    content: '▶ '; /* Default closed state indicator */
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+
+details[open] summary::before {
+    content: '▼ '; /* Open state indicator */
+}
+
+details > *:not(summary) {
+    margin-left: 20px; /* Indent content within details */
+    margin-top: 10px;
+}
+
+/* Specific styling for idle center summaries to remove the h3 look if it was moved */
+.idle-center-details summary {
+    /* font-size: 1.17em; /* Approximate h3 size */
+    /* border-bottom: 1px solid #555; */
+    /* padding-bottom: 3px; */
+    /* margin-bottom: 10px; */
+}
+
+.tech-item {
+    padding: 5px 0;
+    border-bottom: 1px dashed #555;
+}
+.tech-item:last-child {
+    border-bottom: none;
+}
+.tech-effect {
+    display: block;
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: 3px;
+}
