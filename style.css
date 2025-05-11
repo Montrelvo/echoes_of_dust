@@ -101,3 +101,30 @@ details > *:not(summary) {
     color: #ccc;
     margin-top: 3px;
 }
+/* Map Selection Controls */
+#map-selection-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px; /* Increased margin a bit */
+    margin-top: 10px; /* Added margin above */
+}
+
+#map-selection-controls button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ffa500; /* Orange border */
+    background-color: #555; /* Dark grey background */
+    color: #eee; /* Light text color */
+    cursor: pointer;
+    border-radius: 3px; /* Added slight rounding */
+}
+
+#map-selection-controls button:hover {
+    background-color: #666; /* Slightly lighter on hover */
+}
+
+#map-selection-controls button.active-map-button {
+    background-color: #ffa500; /* Orange background for active */
+    color: #222; /* Dark text for contrast */
+    font-weight: bold;
+}

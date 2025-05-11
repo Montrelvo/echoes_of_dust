@@ -85,6 +85,9 @@ let gameState = {
             researched: false,
             cost: { researchPoints: 5 }
         }
+    },
+    ui: {
+        currentMapView: 'sector' // Default to sector map
     }
 };
 
@@ -153,6 +156,9 @@ const researchMapMakingButton = document.getElementById('research-map-making-but
 const techTradeStatusSpan = document.getElementById('tech-trade-status');
 const researchTradeButton = document.getElementById('research-trade-button');
 
+// Map selection buttons
+const buttonMapWorld = document.getElementById('button-map-world');
+const buttonMapSector = document.getElementById('button-map-sector');
 
 // Initial choice buttons
 const choiceScavengingButton = document.getElementById('choice-scavenging');
@@ -301,6 +307,17 @@ function updateDisplay() {
 
     // Update survivor list display
     renderSurvivorList();
+
+    // Update active map button
+    if (buttonMapWorld && buttonMapSector) {
+        buttonMapWorld.classList.remove('active-map-button');
+        buttonMapSector.classList.remove('active-map-button');
+        if (gameState.ui.currentMapView === 'world') {
+            buttonMapWorld.classList.add('active-map-button');
+        } else if (gameState.ui.currentMapView === 'sector') {
+            buttonMapSector.classList.add('active-map-button');
+        }
+    }
 }
 
 // --- Upgrade Cost Calculation ---
@@ -498,6 +515,14 @@ function researchBasicTools() {
     }
 }
 
+// --- Map View Functions ---
+function selectMapView(mapType) {
+    gameState.ui.currentMapView = mapType;
+    console.log("Selected map view:", mapType);
+    // Future: Call function to render the selected map display
+    updateDisplay(); // Re-render to update active button
+}
+
 // --- New Technology Actions ---
 function researchWriting() {
     const tech = gameState.technology.writing;
@@ -609,6 +634,10 @@ function init() {
     if (researchWritingButton) researchWritingButton.addEventListener('click', researchWriting);
     if (researchMapMakingButton) researchMapMakingButton.addEventListener('click', researchMapMaking);
     if (researchTradeButton) researchTradeButton.addEventListener('click', researchTrade);
+
+    // Event listeners for map buttons
+    if (buttonMapWorld) buttonMapWorld.addEventListener('click', () => selectMapView('world'));
+    if (buttonMapSector) buttonMapSector.addEventListener('click', () => selectMapView('sector'));
 
     // Add event listeners for upgrade buttons
     upgradeScavengingButton.addEventListener('click', () => upgradeCenter('scavenging'));
