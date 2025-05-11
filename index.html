@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes of Dust</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Echoes of Dust</h1>
+
+    <div id="initial-choice-screen">
+        <h2>Choose Your Starting Focus:</h2>
+        <button id="choice-scavenging">Scavenging Outpost (Generates Scrap)</button>
+        <button id="choice-labor">Survivor Labor (Generates Food/Water)</button>
+        <button id="choice-exploration">Exploration Network (Maps Area)</button>
+        <button id="choice-research">Research Hub (Generates Research Points)</button>
+    </div>
+
+    <div id="game-container" style="display: none;"> <!-- Hide game initially -->
+        <div id="resource-display">
+            <h2>Resources</h2>
+            <p>Scrap: <span id="scrap-count">0</span></p>
+            <p>Food: <span id="food-count">10</span></p>
+            <p>Water: <span id="water-count">10</span></p>
+            <p>Research Points: <span id="rp-count">0</span></p>
+            <!-- Add more resources as needed -->
+        </div>
+
+        <div id="settlement-management">
+            <h2>Settlement</h2>
+            <div id="buildings">
+                <h3>Buildings</h3>
+                <p>Shelters: <span id="shelter-count">0</span></p>
+                <button id="build-shelter-button">Build Shelter (Cost: 10 Scrap)</button>
+            </div>
+            <div id="survivors">
+                <h3>Survivors</h3>
+                <p>Population: <span id="population-count">1</span> / <span id="max-population-count">0</span></p>
+                <button id="search-survivors-button" disabled>Search for Survivors (Needs Shelter)</button>
+                <ul id="survivor-list">
+                    <!-- Survivor list items with assignment controls will be added here by JS -->
+                </ul>
+            </div>
+        </div>
+
+        <div id="idle-systems">
+            <h2>Idle Production Centers</h2>
+            <p id="idle-system-info">Status: Waiting for initial choice...</p> <!-- Keep this for initial state -->
+
+            <div class="idle-center" id="scavenging-center">
+                <h3>Scavenging (Scrap)</h3>
+                <p>Level: <span id="scavenging-level">0</span></p>
+                <p>Workers: <span id="scavenging-workers">0</span></p>
+                <p>Rate: <span id="scavenging-rate">0.00</span> / tick</p>
+                <button id="upgrade-scavenging-button" disabled>Upgrade (Cost: <span id="scavenging-upgrade-cost">?</span> Food)</button>
+            </div>
+
+            <div class="idle-center" id="farming-center">
+                <h3>Farming (Food)</h3>
+                <p>Level: <span id="farming-level">0</span></p>
+                <p>Workers: <span id="farming-workers">0</span></p>
+                <p>Rate: <span id="farming-rate">0.00</span> / tick</p>
+                <button id="upgrade-farming-button" disabled>Upgrade (Cost: <span id="farming-upgrade-cost">?</span> Water)</button>
+            </div>
+
+            <div class="idle-center" id="water-center">
+                <h3>Water Collection</h3>
+                <p>Level: <span id="water-level">0</span></p>
+                <p>Workers: <span id="water-workers">0</span></p>
+                <p>Rate: <span id="water-rate">0.00</span> / tick</p>
+                <button id="upgrade-water-button" disabled>Upgrade (Cost: <span id="water-upgrade-cost">?</span> Scrap)</button>
+            </div>
+
+             <div class="idle-center" id="research-center" style="display: none;"> <!-- Keep research separate for now -->
+                <h3>Research Hub (RP)</h3>
+                <p>Level: <span id="research-level">0</span></p>
+                <p>Workers: <span id="research-workers">0</span></p>
+                <p>Rate: <span id="research-rate">0.00</span> / tick</p>
+                <button id="upgrade-research-button" disabled>Upgrade (Cost: ?)</button> <!-- Upgrade cost TBD -->
+            </div>
+        </div>
+
+        <div id="progression">
+            <h2>Progression</h2>
+            <div id="technology-tree">
+                <h3>Technology</h3>
+                <div class="tech-item">
+                    <span>Basic Tools (<span id="tech-basic-tools-status">Locked</span>)</span>
+                    <button id="research-basic-tools-button" disabled>Research (Cost: 5 RP)</button>
+                    <span class="tech-effect">Effect: +0.02 Bonus/Worker</span>
+                </div>
+            </div>
+            <!-- Survivor / Expansion info later -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
