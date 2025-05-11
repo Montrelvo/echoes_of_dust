@@ -6,8 +6,10 @@
     <title>Atlas Metadata Editor</title>
     <style>
         body { font-family: sans-serif; margin: 20px; background-color: #f0f0f0; }
-        .container { display: flex; gap: 20px; }
+        .container { display: grid; grid-template-columns: auto auto 1fr; gap: 20px; align-items: start; }
         .atlas-display { border: 1px solid #ccc; }
+        .tile-zoom-viewer { border: 1px solid #ccc; padding: 5px; background-color: #fff; }
+        #tile-zoom-canvas { border: 1px solid #eee; }
         .editor-panel { border: 1px solid #ccc; padding: 15px; background-color: #fff; min-width: 300px; }
         .editor-panel label { display: block; margin-top: 10px; font-weight: bold; }
         .editor-panel input[type="text"], 
@@ -18,9 +20,12 @@
         #tags-container span { display: inline-block; background-color: #e0e0e0; padding: 3px 7px; margin-right: 5px; border-radius: 3px; font-size: 0.9em; }
         #tags-container button { font-size: 0.8em; padding: 2px 4px; margin-left: 5px; background-color: #ff6b6b; }
         #entry-list { list-style-type: none; padding: 0; max-height: 400px; overflow-y: auto; border: 1px solid #ddd; margin-top:10px;}
-        #entry-list li { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; }
+        #entry-list li { padding: 8px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         #entry-list li:hover { background-color: #f0f0f0; }
         #entry-list li.selected { background-color: #007bff; color: white; }
+        #entry-list li .status-indicator { font-size: 0.8em; padding: 2px 5px; border-radius: 3px; margin-left: 10px; }
+        #entry-list li .status-indicator.completed { background-color: #28a745; color: white; }
+        #entry-list li .status-indicator.incomplete { background-color: #ffc107; color: #333; }
     </style>
 </head>
 <body>
@@ -36,8 +41,13 @@
     <div class="container">
         <div class="atlas-viewer">
             <h2>Atlas Preview</h2>
-            <canvas id="atlas-canvas" class="atlas-display" width="512" height="512"></canvas> 
+            <canvas id="atlas-canvas" class="atlas-display" width="512" height="512"></canvas>
             <!-- Adjust canvas size as needed, or make it dynamic -->
+        </div>
+
+        <div class="tile-zoom-viewer">
+            <h2>Selected Tile Zoom</h2>
+            <canvas id="tile-zoom-canvas" width="128" height="128"></canvas> <!-- e.g., 4x zoom for 32x32 tile -->
         </div>
 
         <div class="editor-panel">

@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const jsonFileInput = document.getElementById('json-file-input');
     const atlasCanvas = document.getElementById('atlas-canvas');
     const canvasCtx = atlasCanvas.getContext('2d');
+    const tileZoomCanvas = document.getElementById('tile-zoom-canvas');
+    const tileZoomCtx = tileZoomCanvas.getContext('2d');
     const selectedTileInfoDiv = document.getElementById('selected-tile-info');
     const entryListUl = document.getElementById('entry-list');
     
@@ -175,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             TILE_HEIGHT * scaleY
         );
         console.log("Highlighted tile:", entry.id);
+        drawZoomedTile(entry); // Draw the zoomed view
     }
 
     // --- UI Interaction & Data Handling ---
@@ -226,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const entry = loadedAtlasMetadata.definitions[selectedEntryIndex];
         selectedTileInfoDiv.textContent = `Selected: ${entry.id || 'Unnamed'} (X: ${entry.x}, Y: ${entry.y})`;
         populateEditingPanel(entry);
-        highlightSelectedTile();
+        highlightSelectedTile(); // This will also call drawZoomedTile
         updateEntryListSelection();
     }
     
@@ -235,7 +238,22 @@ document.addEventListener('DOMContentLoaded', () => {
         entryListUl.innerHTML = ''; // Clear existing
         loadedAtlasMetadata.definitions.forEach((entry, index) => {
             const li = document.createElement('li');
-            li.textContent = `${entry.id || `Entry ${index}`} (X:${entry.x}, Y:${entry.y}) - ${entry.type || 'No Type'}`;
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = `${entry.id || `Entry ${index}`} (X:${entry.x}, Y:${entry.y}) - ${entry.type || 'No Type'}`;
+            
+            const statusSpan = document.createElement('span');
+            statusSpan.classList.add('status-indicator');
+            if (isEntryCompleted(entry)) {
+                statusSpan.classList.add('completed');
+                statusSpan.textContent = '✓ Done';
+            } else {
+                statusSpan.classList.add('incomplete');
+                statusSpan.textContent = '✎ Edit';
+            }
+            
+            li.appendChild(textSpan);
+            li.appendChild(statusSpan);
             li.dataset.index = index;
             entryListUl.appendChild(li);
         });
@@ -375,6 +393,42 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error exporting JSON:", err);
             alert("Error exporting JSON. Check console for details.");
         }
+    }
+
+    // --- Helper: Check if entry is considered "completed" ---
+    function isEntryCompleted(entry) {
+        if (!entry) return false;
+        const hasCustomId = entry.id && !entry.id.startsWith('tile_col');
+        const hasType = entry.type && entry.type !== 'PLEASE_DEFINE_TYPE';
+        const hasName = entry.name && entry.name.trim() !== '';
+        // Add more checks if needed, e.g., creatureId if type is creatureSprite
+        return hasCustomId && hasType && hasName;
+    }
+
+    // --- Helper: Draw Zoomed Tile ---
+    function drawZoomedTile(entry) {
+        if (!entry || !atlasImage.complete || atlasImage.naturalWidth === 0) {
+            tileZoomCtx.clearRect(0, 0, tileZoomCanvas.width, tileZoomCanvas.height);
+            tileZoomCtx.fillStyle = '#f0f0f0';
+            tileZoomCtx.fillRect(0, 0, tileZoomCanvas.width, tileZoomCanvas.height);
+            tileZoomCtx.fillStyle = '#777';
+            tileZoomCtx.textAlign = 'center';
+            tileZoomCtx.fillText("No tile", tileZoomCanvas.width / 2, tileZoomCanvas.height / 2);
+            return;
+        }
+
+        tileZoomCtx.imageSmoothingEnabled = false; // For pixel art
+        tileZoomCtx.clearRect(0, 0, tileZoomCanvas.width, tileZoomCanvas.height);
+        tileZoomCtx.drawImage(
+            atlasImage,
+            entry.x, // source X from atlas
+            entry.y, // source Y from atlas
+            TILE_WIDTH,  // source width
+            TILE_HEIGHT, // source height
+            0, 0,        // destination X, Y on zoom canvas
+            tileZoomCanvas.width,  // destination width (scaled)
+            tileZoomCanvas.height  // destination height (scaled)
+        );
     }
 
     // --- Start the editor ---
