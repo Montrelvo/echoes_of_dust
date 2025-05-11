@@ -14,6 +14,36 @@ This document outlines the design and implementation considerations for several 
     *   Region-specific names (e.g., "The Dust Wastes," "Abandoned City Core") - to be defined as game world expands.
 *   **Interaction:** Clicking a button would update the main map display area (to be developed).
 
+#### 1.1.1. Implementation Plan for UI Buttons
+
+*   **HTML Structure (`index.html`):**
+    *   A new `div` container (e.g., `<div id="map-selection-controls">`) will be placed immediately after the main `<h1>Echoes of Dust</h1>` title.
+    *   Buttons:
+        *   `<button id="button-map-world">World Map</button>`
+        *   `<button id="button-map-sector">Sector Map</button>`
+*   **CSS Styling (`style.css`):**
+    *   Style `#map-selection-controls` for layout (e.g., `display: flex; justify-content: center; margin-bottom: 10px;`).
+    *   Style the map buttons (e.g., `padding: 5px 10px; margin: 0 5px; border: 1px solid #ffa500; background-color: #555; color: #eee; cursor: pointer;`).
+    *   Add a class for active map button (e.g., `.active-map-button { background-color: #ffa500; color: #222; }`).
+*   **JavaScript Logic (`script.js`):**
+    *   **`gameState` Update:**
+        *   Add `gameState.ui.currentMapView = 'sector';` (defaulting to sector map).
+    *   **DOM References:**
+        *   `const mapSelectionControls = document.getElementById('map-selection-controls');`
+        *   `const buttonMapWorld = document.getElementById('button-map-world');`
+        *   `const buttonMapSector = document.getElementById('button-map-sector');`
+    *   **Event Handler Functions:**
+        *   `function selectMapView(mapType)`:
+            *   Updates `gameState.ui.currentMapView = mapType;`
+            *   Logs selection: `console.log("Selected map view:", mapType);`
+            *   Manages `.active-map-button` class on buttons.
+            *   (Future) Calls function to render the selected map.
+    *   **Event Listeners (in `init()`):**
+        *   `buttonMapWorld.addEventListener('click', () => selectMapView('world'));`
+        *   `buttonMapSector.addEventListener('click', () => selectMapView('sector'));`
+    *   **Initial Active State (in `init()` or `updateDisplay()`):**
+        *   Ensure the button corresponding to `gameState.ui.currentMapView` has the active class on game load.
+
 ### 1.2. Future Feature: Procedurally Generated Tile-Based Map UI
 
 *   **Concept:** A dynamic map displayed as a grid of tiles.
