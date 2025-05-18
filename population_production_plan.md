@@ -3,16 +3,17 @@
 This document outlines the plan to add resource production based on the current population in [`script.js`](script.js), without altering existing production mechanisms.
 
 **User-Defined Rates:**
-*   Each survivor produces 0.05 Food per tick.
-*   Each survivor produces 0.05 Water per tick.
-*   Each survivor produces 0.05 Scrap per tick.
-*   Every 5 survivors produce 0.05 Research Points per tick.
+
+* Each survivor produces 0.05 Food per tick.
+* Each survivor produces 0.05 Water per tick.
+* Each survivor produces 0.05 Scrap per tick.
+* Every 5 survivors produce 0.05 Research Points per tick.
 
 **Detailed Plan:**
 
-1.  **Update `gameState` Object ([`script.js:2`](script.js:2)):**
-    *   Introduce a new key, `populationProductionRates`, within the `gameState` object.
-    *   This new section will be:
+1. **Update `gameState` Object ([`script.js:2`](script.js:2)):**
+    * Introduce a new key, `populationProductionRates`, within the `gameState` object.
+    * This new section will be:
         ```javascript
         populationProductionRates: {
             foodPerSurvivor: 0.05,
@@ -22,12 +23,12 @@ This document outlines the plan to add resource production based on the current 
         }
         ```
 
-2.  **Modify `gameTick()` Function ([`script.js:150`](script.js:150)):**
-    *   After the existing lines that add resources from `idleProduction` ([`script.js:157-160`](script.js:157-160)), insert new logic:
-        *   `gameState.resources.food += gameState.population.current * gameState.populationProductionRates.foodPerSurvivor;`
-        *   `gameState.resources.water += gameState.population.current * gameState.populationProductionRates.waterPerSurvivor;`
-        *   `gameState.resources.scrap += gameState.population.current * gameState.populationProductionRates.scrapPerSurvivor;`
-        *   `gameState.resources.researchPoints += Math.floor(gameState.population.current / 5) * gameState.populationProductionRates.researchPointsPer5Survivors;`
+2. **Modify `gameTick()` Function ([`script.js:150`](script.js:150)):**
+    * After the existing lines that add resources from `idleProduction` ([`script.js:157-160`](script.js:157-160)), insert new logic:
+        * `gameState.resources.food += gameState.population.current * gameState.populationProductionRates.foodPerSurvivor;`
+        * `gameState.resources.water += gameState.population.current * gameState.populationProductionRates.waterPerSurvivor;`
+        * `gameState.resources.scrap += gameState.population.current * gameState.populationProductionRates.scrapPerSurvivor;`
+        * `gameState.resources.researchPoints += Math.floor(gameState.population.current / 5) * gameState.populationProductionRates.researchPointsPer5Survivors;`
 
 **Mermaid Diagram of `gameTick()` Flow Change:**
 
